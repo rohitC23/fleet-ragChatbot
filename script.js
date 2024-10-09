@@ -929,21 +929,19 @@ document.getElementById('exit-scrape').addEventListener('click', function() {
   document.getElementById('order-number').value = '';
 });
 
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("loggedInUser");
-      localStorage.removeItem("userPassword");
-      dashboard.style.display = "none";
-      floatingIcon.style.display = "none";
-      loginContainer.style.display = "flex";
-      headerContainer.style.display = "none";
-      chatPopup.style.display= "none";
-      usernameInput.value = "";
-      passwordInput.value = "";
-      chatbox.innerHTML = ''; // Clear chat history
-      chatInitialized = false; // Reset chat initialization flag
-    });
-  
-  
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("userPassword");
+    localStorage.removeItem("userRole");
+    floatingIcon.style.display = "none";
+    loginContainer.style.display = "flex";
+    headerContainer.style.display = "none";
+    chatPopup.style.display= "none";
+    usernameInput.value = "";
+    passwordInput.value = "";
+    chatbox.innerHTML = ''; // Clear chat history
+    chatInitialized = false; // Reset chat initialization flag
+  });
   
   
   });  
