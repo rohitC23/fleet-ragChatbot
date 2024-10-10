@@ -7,7 +7,7 @@ body {
 
 .header-container{
   width: 100%;
-  display: block !important ;
+  display: block ;
 }
 .trial-banner {
   background-color: #607AD6;
@@ -23,6 +23,7 @@ nav {
   align-items: center;
   padding: 20px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+  width: inherit;
 }
 
 img{
@@ -750,4 +751,20 @@ input {
   justify-content: center;
   cursor: pointer;
   position: relative;
+}
+
+#add-user-section select {
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  width: 100%;
+  font-size: 13px;
+  color: gray;
+}
+
+/* Additional styling for the dropdown (optional) */
+#add-user-section select {
+  background-color: white;
+  appearance: none; /* To remove the default arrow in some browsers */
 }
