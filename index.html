@@ -51,10 +51,8 @@
           <!-- New user profile dropdown -->
           <div class="profile-dropdown">
             <img src="images/user.png" alt="Avatar" class="profile-avatar">
-            <!-- <span>&#x2BC6;</span> -->
             <div class="dropdown-content">
-              <a ><button id="add-user">Add User</button></a>
-              <a><button id="web-scrape">Web Scraping</button></a>
+              <a id="add-user-link"><button id="add-user">Add User</button></a>
               <a ><button id="logout-btn">Logout</button></a>
             </div>
           </div>
@@ -71,16 +69,20 @@
           <h2>User Registration</h2>
           <input type="text" id="new-username" placeholder="Enter Username">
           <input type="password" id="new-email" placeholder="Enter Password">
+          
+          <!-- Dropdown for user roles -->
+          <select id="user-role" style="display: none;">
+              <option value="" disabled selected>Select Role</option>
+              <option value="revenue">Revenue</option>
+              <option value="dispatch">Dispatch</option>
+              <option value="driver">Driver</option>
+              <option value="admin">Admin</option>
+          </select>
+      
           <button id="create-user">Create User</button>
           <button id="exit">Close Registration</button>
-        </div >
-
-        <div id="web-scrape-section" style="display: none;">
-          <h2>Web Scraping</h2>
-          <input type="text" id="order-number" placeholder="Enter Order Number">
-          <button id="search-btn">Search</button>
-          <button id="exit-scrape">Exit</button>
-        </div >
+      </div>
+      
     </div>
     
     <script type="module" src="script.js"></script>
