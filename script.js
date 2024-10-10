@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const usernameInput = document.getElementById("username");
   const passwordInput = document.getElementById("password");
   const errorMessage = document.getElementById("error-message");
-  const addUser = document.getElementById("add-user");
+  const addUserLink = document.getElementById("add-user-link");
   const logoutBtn = document.getElementById("logout-btn");
   const userInputContainer = document.getElementById('user-input-container');
 
@@ -58,7 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
         headerContainer.style.display = "flex";
         chatIcon.style.display = "block"; // Ensure chatIcon is displayed initially after login
         closeIcon.style.display = "none";
-      } else {
+      }
+      if (data.message === "sub_user logged In"){
+        addUserLink.style.display = "none";
+      }
+      if (data.message === "Admin logged In"){
+        addUserLink.style.display = "flex";
+      }
+      else {
         errorMessage.textContent = "Invalid username or password.";
       }
     })
@@ -144,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       addBotTypingIndicator();
 
       const userRole = localStorage.getItem("userRole");
+      //console.log(userRole);
     
       // Remove the suggestion container if it exists
       const suggestionContainer = document.querySelector(".suggestions");
@@ -172,6 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error:", error);
         });
     }
+
     
     function addBotTypingIndicator() {
       const chatbox = document.getElementById("chatbox");
@@ -722,16 +731,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Show the add user section
       document.getElementById('add-user-section').style.display = 'block';
-  });
+      
+      const dropDown = document.getElementById("user-role");
+      const role = localStorage.getItem("userRole");
 
-  document.getElementById('web-scrape').addEventListener('click', function() {
-    // Hide chat header, chatbox, and user input container
-    document.querySelector('.chat-header').style.display = 'none';
-    document.getElementById('chatbox').style.display = 'none';
-    document.getElementById('user-input-container').style.display = 'none';
-
-    // Show the add user section
-    document.getElementById('web-scrape-section').style.display = 'block';
+      if (role === "admin") {
+        dropDown.style.display = "flex"; // Show the dropdown for 'admin'
+      } else {
+        dropDown.style.display = "none"; // Hide it for other roles
+      }
   });
 
   document.getElementById('create-user').addEventListener('click', function() {
@@ -750,13 +758,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const adminPassword = localStorage.getItem("userPassword");
     const adminRole = localStorage.getItem("userRole");
 
+    // Get the selected role from the dropdown, if available
+    const dropDown = document.getElementById("user-role");
+    const selectedRole = dropDown.value;
+
+    // Use the selected role if available, otherwise default to adminRole from localStorage
+    const roleToSend = selectedRole ? selectedRole : adminRole;
+
     // Prepare the API body
     const requestBody = {
         "username": adminUser,
         "password": adminPassword,
         "sub_user": username,
         "sub_password": password,
-        "role": adminRole
+        "role": roleToSend
     };
 
     // Call the API to create the user
@@ -806,6 +821,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Reset the input fields
             document.getElementById('new-username').value = '';
             document.getElementById('new-email').value = '';
+            document.getElementById("user-role").selectedIndex = 0;
+
         }, 3000); // 3000 milliseconds = 3 seconds
     })
     .catch(error => {
@@ -814,95 +831,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-document.getElementById('search-btn').addEventListener('click', function() {
-  // Get the values from the input fields
-  const ordernumber = document.getElementById('order-number').value.trim();
-
-  // Check if the order number field is filled
-  if (!ordernumber) {
-      alert('Please fill the order number field');
-      return; // Stop the function if the field is empty
-  }  
-
-  // Create and show the loading effect
-  const loadingDiv = document.createElement('div');
-  loadingDiv.id = 'loading';
-  loadingDiv.innerHTML = `
-    <p style="font-size: 18px; font-weight: bold; color: #007BFF; text-align: center; animation: blink 1.5s linear infinite;">
-      Loading, please wait...
-    </p>
-  `;
-
-  // Append the loading element to the web-scrape-section
-  document.getElementById('web-scrape-section').appendChild(loadingDiv);
-
-  // Prepare the API body
-  const requestBody = {
-      "order_number": ordernumber
-  };
-
-  // Call the API to get the order status
-  fetch('http://127.0.0.1:8000/order_status', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-  })
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('Failed to fetch order status');
-      }
-      return response.json();
-  })
-  .then(data => {
-      //console.log('Fetched Data successfully:', data);
-      // Hide input and buttons
-      document.getElementById('order-number').style.display = 'none';
-      document.getElementById('search-btn').style.display = 'none';
-      document.getElementById('exit-scrape').style.display = 'none';
-
-      // Remove the loading effect
-      document.getElementById('loading').remove();
-      
-      // Create a new div with the fetched data
-      const dataDiv = document.createElement('div');
-      dataDiv.id = 'web-data';
-      dataDiv.innerHTML = `
-        <p><strong>Flow Name:</strong> ${data.flow_name}</p>
-        <p><strong>Tracking Info:</strong> ${data.tracking_info}</p>
-      `;
-      
-      // Append the new div to the web-scrape-section
-      document.getElementById('web-scrape-section').appendChild(dataDiv);
-
-      // Create a new button
-      const newButton = document.createElement('button');
-      newButton.textContent = 'Back'; // Modify text as needed
-      newButton.id = 'back-btn';
-      
-      // Append the button below the div
-      document.getElementById('web-scrape-section').appendChild(newButton);
-
-      newButton.addEventListener('click', function() {
-        document.getElementById('web-data').style.display = 'none';
-        document.getElementById('back-btn').style.display = 'none';
-        document.getElementById('order-number').style.display = 'flex';
-        document.getElementById('search-btn').style.display = 'flex';
-        document.getElementById('exit-scrape').style.display = 'flex';
-        document.getElementById('order-number').value = '';
-      });
-  })
-  .catch(error => {
-      console.error('Error:', error);
-      
-      // Remove the loading effect if error occurs
-      document.getElementById('loading').remove();
-      
-      // Display an error message to the user
-      alert('Error fetching data. Please try again later.');
-  });
-});
 
 document.getElementById('exit').addEventListener('click', function() {
   // Hide the add user section
@@ -918,16 +846,6 @@ document.getElementById('exit').addEventListener('click', function() {
   document.getElementById('new-email').value = '';
 });
 
-document.getElementById('exit-scrape').addEventListener('click', function() {
-  // Hide the add user section
-  document.getElementById('web-scrape-section').style.display = 'none';
-
-  // Show chat header, chatbox, and user input container
-  document.querySelector('.chat-header').style.display = 'flex';
-  document.getElementById('chatbox').style.display = 'block';
-  document.getElementById('user-input-container').style.display = 'flex';
-  document.getElementById('order-number').value = '';
-});
 
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("loggedInUser");
